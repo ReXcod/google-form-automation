@@ -8,19 +8,32 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import random
 import time
+import os
+import subprocess
+import shutil
 
 # Sample word list for text fields
 WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
 
+# Function to manually install Chromium and Chromedriver
+def install_chromium():
+    if not shutil.which("chromium-browser"):
+        st.write("Installing Chromium...")
+        os.system('wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb')
+        os.system('apt-get update && apt-get install -y ./google-chrome-stable_current_amd64.deb')
+        os.system('rm google-chrome-stable_current_amd64.deb')
+
 def fill_google_form(form_link):
     try:
+        install_chromium()
+
         # Configure Chrome options
         options = Options()
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        # Automatically download and set up Chromedriver
+        # Use webdriver-manager to automatically download matching Chromedriver
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(form_link)
 
