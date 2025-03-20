@@ -10,9 +10,9 @@ import time
 WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
 
 # BrowserStack Credentials
-USERNAME = "YOUR_BROWSERSTACK_USERNAME"
-ACCESS_KEY = "YOUR_BROWSERSTACK_ACCESS_KEY"
-SELENIUM_GRID_URL = f"https://{USERNAME}:{ACCESS_KEY}@hub-cloud.browserstack.com/wd/hub"
+USERNAME = "rohansonwane_BNJH2r"
+ACCESS_KEY = "5fLorEcifzp35JgNM3z1"
+SELENIUM_GRID_URL = f"https://rohansonwane_BNJH2r:5fLorEcifzp35JgNM3z1@hub-cloud.browserstack.com/wd/hub"
 
 def fill_google_form(form_link):
     try:
