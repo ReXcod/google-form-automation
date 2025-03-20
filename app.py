@@ -1,29 +1,34 @@
 import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import random
 import time
+import shutil
 
 # Sample word list for text fields
 WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
 
-# Function to fill Google Form automatically
+# Path to Chromium and Chromedriver
+CHROMEDRIVER_PATH = shutil.which("chromedriver")
+CHROME_PATH = shutil.which("chromium")
+
 def fill_google_form(form_link):
     try:
         options = Options()
-        options.add_argument("--headless")  # Run in the background
+        options.binary_location = CHROME_PATH
+        options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        service = Service(CHROMEDRIVER_PATH)
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get(form_link)
 
-        time.sleep(2)  # Allow time for form to load
+        time.sleep(2)
 
         # Fill text fields with a single random word
         text_fields = WebDriverWait(driver, 5).until(
@@ -36,7 +41,7 @@ def fill_google_form(form_link):
         # Fill multiple-choice questions (select a random option)
         choices = driver.find_elements(By.XPATH, '//div[@role="radio"]')
         for choice in choices:
-            if random.choice([True, False]):  # Randomly choose an option
+            if random.choice([True, False]):
                 choice.click()
                 time.sleep(0.5)
 
