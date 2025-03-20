@@ -1,34 +1,34 @@
 import streamlit as st
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 import random
 import time
-import os
 
-# Sample word list for text fields
 WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
+
+# BrowserStack Credentials
+USERNAME = "YOUR_BROWSERSTACK_USERNAME"
+ACCESS_KEY = "YOUR_BROWSERSTACK_ACCESS_KEY"
+SELENIUM_GRID_URL = f"https://{USERNAME}:{ACCESS_KEY}@hub-cloud.browserstack.com/wd/hub"
 
 def fill_google_form(form_link):
     try:
-        # Configure Chrome options
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        # Configure BrowserStack options
+        capabilities = {
+            'browserName': 'Chrome',
+            'browserVersion': 'latest',
+            'os': 'Windows',
+            'os_version': '10'
+        }
 
-        # Download and set up Chromedriver directly using webdriver-manager
-        driver_path = ChromeDriverManager().install()
-        service = Service(driver_path)
-
-        # Force explicit Chromium binary location
-        options.binary_location = "/usr/bin/chromium-browser"
-
-        driver = webdriver.Chrome(service=service, options=options)
+        # Connect to remote Selenium server
+        driver = webdriver.Remote(
+            command_executor=SELENIUM_GRID_URL,
+            desired_capabilities=capabilities
+        )
         driver.get(form_link)
 
         time.sleep(2)
@@ -63,7 +63,7 @@ def fill_google_form(form_link):
         return f"Error: {e}"
 
 # Streamlit UI
-st.title("Google Form Auto-Filler (Multiple Choice + Text)")
+st.title("Google Form Auto-Filler (Remote Selenium)")
 
 form_link = st.text_input("Google Form Link", "")
 
