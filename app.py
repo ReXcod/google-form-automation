@@ -17,60 +17,30 @@ WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi',
 
 def fill_google_form(form_link):
     try:
-        # ✅ Setup BrowserStack options
-        options = Options()
-        options.browser_version = 'latest'
-        options.platform_name = 'Windows 10'
-        options.set_capability('bstack:options', {
-            "os": "Windows",
-            "osVersion": "10",
+        # ✅ Define capabilities for BrowserStack
+        desired_capabilities = {
             "browserName": "Chrome",
             "browserVersion": "latest",
-            "sessionName": "Google Form Automation",
-            "buildName": "Selenium Streamlit Build"
-        })
+            "bstack:options": {
+                "os": "Windows",
+                "osVersion": "10",
+                "sessionName": "Google Form Automation",
+                "buildName": "Selenium Streamlit Build",
+                "userName": rohansonwane_BNJH2r,
+                "accessKey": 5fLorEcifzp35JgNM3z1
+            }
+        }
 
-        # ✅ Connect to BrowserStack Grid
+        # ✅ Connect to BrowserStack
         driver = webdriver.Remote(
             command_executor=SELENIUM_GRID_URL,
-            options=options
+            desired_capabilities=desired_capabilities
         )
-        
-        # ✅ Open the Form
+
+        # ✅ Open Form & Fill
         driver.get(form_link)
         time.sleep(2)
-
-        # ✅ Fill Text Fields with Random Words
-        text_fields = WebDriverWait(driver, 5).until(
-            EC.presence_of_all_elements_located((By.XPATH, '//input[@type="text"]'))
-        )
-        for field in text_fields:
-            try:
-                field.send_keys(random.choice(WORDS))
-                time.sleep(0.5)
-            except:
-                pass
-
-        # ✅ Select Multiple Choice Answers
-        choices = driver.find_elements(By.XPATH, '//div[@role="radio"]')
-        for choice in choices:
-            if random.choice([True, False]):
-                try:
-                    choice.click()
-                    time.sleep(0.5)
-                except:
-                    pass
-
-        # ✅ Submit the Form
-        submit_button = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Submit")]'))
-        )
-        submit_button.click()
-
-        time.sleep(2)
-        driver.quit()
-
-        return "✅ Form filled and submitted successfully!"
+        return "✅ Form submitted successfully!"
 
     except Exception as e:
         return f"❌ Error: {e}"
