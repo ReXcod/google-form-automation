@@ -8,19 +8,24 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import random
 import time
+import shutil
 
 # Sample word list for text fields
 WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
 
+# Find the installed Chromium path
+CHROME_PATH = shutil.which("chromium-browser")
+
 def fill_google_form(form_link):
     try:
-        # Setup Chrome and Chromedriver using webdriver-manager
+        # Configure Chrome options
         options = Options()
+        options.binary_location = CHROME_PATH
         options.add_argument("--headless")  # Run in headless mode (no UI)
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        # Use webdriver-manager to automatically download compatible Chromedriver
+        # Use webdriver-manager to download and configure Chromedriver
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(form_link)
 
