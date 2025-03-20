@@ -1,2 +1,0 @@
-# Only Chromium installed, no Chromedriver
-chromium
