@@ -1,1 +1,2 @@
-chromium-browser
+# Only Chromium installed, no Chromedriver
+chromium
