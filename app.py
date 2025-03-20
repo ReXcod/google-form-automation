@@ -12,7 +12,7 @@ import shutil
 # Sample word list for text fields
 WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
 
-# Path to Chromium and Chromedriver
+# Use installed Chromium and Chromedriver paths
 CHROMEDRIVER_PATH = shutil.which("chromedriver")
 CHROME_PATH = shutil.which("chromium")
 
@@ -20,10 +20,11 @@ def fill_google_form(form_link):
     try:
         options = Options()
         options.binary_location = CHROME_PATH
-        options.add_argument("--headless")
+        options.add_argument("--headless")  # Run in headless mode
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
+        # Initialize WebDriver
         service = Service(CHROMEDRIVER_PATH)
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(form_link)
@@ -38,7 +39,7 @@ def fill_google_form(form_link):
             field.send_keys(random.choice(WORDS))
             time.sleep(0.5)
 
-        # Fill multiple-choice questions (select a random option)
+        # Fill multiple-choice questions
         choices = driver.find_elements(By.XPATH, '//div[@role="radio"]')
         for choice in choices:
             if random.choice([True, False]):
