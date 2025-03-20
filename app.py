@@ -33,7 +33,7 @@ def fill_google_form(form_link):
         }
 
         # ✅ Connect to BrowserStack
-      from selenium import webdriver
+from selenium import webdriver
 
 options = webdriver.ChromeOptions()
 options.browser_version = "latest"
@@ -47,6 +47,12 @@ driver = webdriver.Remote(
     command_executor="https://hub.browserstack.com/wd/hub",
     options=options  # ✅ Correct way to pass options
 )
+
+driver.get("https://www.google.com")  # Example test case
+print("Title of the page is:", driver.title)
+
+driver.quit()
+
 
 
         # ✅ Open Form & Fill
