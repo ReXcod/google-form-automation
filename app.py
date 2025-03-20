@@ -15,19 +15,18 @@ WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi',
 
 # Find the installed Chromium path
 CHROME_PATH = shutil.which("chromium-browser")
-CHROMEDRIVER_PATH = shutil.which("chromedriver")
 
 def fill_google_form(form_link):
     try:
         # Configure Chrome options
         options = Options()
         options.binary_location = CHROME_PATH
-        options.add_argument("--headless")  # Run in headless mode
+        options.add_argument("--headless")  # Run in headless mode (no UI)
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        # Start WebDriver using installed Chromedriver
-        service = Service(CHROMEDRIVER_PATH)
+        # Use webdriver-manager to automatically download the matching Chromedriver
+        service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(form_link)
 
