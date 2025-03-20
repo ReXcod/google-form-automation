@@ -6,56 +6,62 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import random
 import time
 
-# Function to fill Google Form
-def fill_google_form(form_link, text_data):
+# Sample word list for text fields
+WORDS = ['apple', 'banana', 'orange', 'grape', 'mango', 'peach', 'pear', 'kiwi', 'plum', 'berry']
+
+# Function to fill Google Form automatically
+def fill_google_form(form_link):
     try:
         options = Options()
-        options.add_argument("--headless")
+        options.add_argument("--headless")  # Run in the background
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(form_link)
 
-        time.sleep(2)  # Wait for the form to load
+        time.sleep(2)  # Allow time for form to load
 
-        # Fill text fields
-        text_fields = WebDriverWait(driver, 10).until(
+        # Fill text fields with a single random word
+        text_fields = WebDriverWait(driver, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//input[@type="text"]'))
         )
-        for field, text in zip(text_fields, text_data):
-            field.send_keys(text)
-            time.sleep(1)
+        for field in text_fields:
+            field.send_keys(random.choice(WORDS))
+            time.sleep(0.5)
+
+        # Fill multiple-choice questions (select a random option)
+        choices = driver.find_elements(By.XPATH, '//div[@role="radio"]')
+        for choice in choices:
+            if random.choice([True, False]):  # Randomly choose an option
+                choice.click()
+                time.sleep(0.5)
 
         # Submit the form
-        submit_button = WebDriverWait(driver, 10).until(
+        submit_button = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Submit")]'))
         )
         submit_button.click()
 
         time.sleep(2)
         driver.quit()
-        return "Form submitted successfully!"
-    
+
+        return "Form filled and submitted successfully!"
+
     except Exception as e:
         return f"Error: {e}"
 
 # Streamlit UI
-st.title("Google Form Auto-Filler")
+st.title("Google Form Auto-Filler (Multiple Choice + Text)")
 
 form_link = st.text_input("Google Form Link", "")
-num_fields = st.number_input("Number of Fields to Fill", min_value=1, value=1, step=1)
 
-text_data = []
-for i in range(num_fields):
-    text = st.text_input(f"Field {i + 1} Text")
-    text_data.append(text)
-
-if st.button("Submit Form"):
-    if form_link and all(text_data):
-        status = fill_google_form(form_link, text_data)
+if st.button("Submit Form with Random Data"):
+    if form_link:
+        status = fill_google_form(form_link)
         st.success(status)
     else:
-        st.error("Please provide all required details!")
+        st.error("Please provide a valid Google Form link!")
