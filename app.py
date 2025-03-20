@@ -45,10 +45,10 @@ options.set_capability("bstack:options", {
 
 driver = webdriver.Remote(
     command_executor="https://hub.browserstack.com/wd/hub",
-    options=options  # ✅ Correct way to pass options
+    options=options
 )
 
-driver.get("https://www.google.com")  # Example test case
+driver.get("https://www.google.com")  # Open Google
 print("Title of the page is:", driver.title)
 
 driver.quit()
