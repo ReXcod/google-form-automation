@@ -33,10 +33,21 @@ def fill_google_form(form_link):
         }
 
         # ✅ Connect to BrowserStack
-        driver = webdriver.Remote(
-            command_executor=SELENIUM_GRID_URL,
-            desired_capabilities=desired_capabilities
-        )
+      from selenium import webdriver
+
+options = webdriver.ChromeOptions()
+options.browser_version = "latest"
+options.platform_name = "Windows 10"
+options.set_capability("bstack:options", {
+    "userName": "rohansonwane_BNJH2r",
+    "accessKey": "5fLorEcifzp35JgNM3z1"
+})
+
+driver = webdriver.Remote(
+    command_executor="https://hub.browserstack.com/wd/hub",
+    options=options  # ✅ Correct way to pass options
+)
+
 
         # ✅ Open Form & Fill
         driver.get(form_link)
